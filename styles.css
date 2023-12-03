@@ -1,2 +1,14 @@
 
-body{}
+body{
+    max-width: 2000px;
+    background-image: url("letter-back.jpg");
+}
+
+h1{
+
+    font-family: 'Pacifico', cursive;
+}
+
+p{
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; 
+}
