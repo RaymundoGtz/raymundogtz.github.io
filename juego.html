@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Superbowl Quizz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: url(fondo.jpeg) no-repeat center center/cover;
+    }
+    .container {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+    .start-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+    .start-container h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .start-container h1:hover{
+      color: black;
+    }
+    .start-container button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #000000;
+      color: #fff;
+      transition: background-color 0.3s ease;
+    }
+    .start-container button:hover {
+      background-color: #ffffff;
+      color: #000000;
+    }
+    .quiz-container {
+      display: none;
+    }
+    .question {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+    }
+    .options button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #000000;
+      color: #fff;
+      transition: background-color 0.3s ease;
+    }
+    .options button:hover {
+      background-color: #2563eb;
+    }
+    .final-message {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #000000;
+      background-color: rgb(255, 255, 255);
+      padding: 10px;
+    }
+    .final-button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #000000;
+      color: #fff;
+      transition: background-color 0.3s ease;
+      margin-top: 20px;
+    }
+    .final-button:hover {
+      background-color: #ffffff;
+      color: #000000;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="start-screen">
+    <div class="start-container">
+      <h1>Listo para el SuperBowl?</h1>
+      <p>No te puedo dar la ubicacion sin antes darte un poco de cultura, por eso hice este pequeno quiz</p>
+      <button onclick="startQuiz()">Comencemos</button>
+    </div>
+  </div>
+
+  <div class="quiz-container" id="quiz">
+    <div id="question-container">
+      <p class="question" id="question">Pregunta aquí</p>
+      <div class="options" id="options">
+        <!-- Opciones generadas dinámicamente -->
+      </div>
+    </div>
+    <div id="final-message" style="display: none;">
+      <p class="final-message">¡Felicidades, completaste el quiz!</p>
+      <button class="final-button" onclick="redirectToLocation()">Ver ubicación</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "¿Quien ha ganado mas superbowls en la historia?",
+        options: ["New England Patriots", "Kansas City Chiefs", "Pittsburgh Steelers", "Tom Brady"],
+        correct: "Tom Brady",
+      },
+      {
+        question: "Quien gano el Superbowl en 2024?",
+        options: ["Miami Dolphins", "Kansas City", "Philadelphia Eagles", "49ers"],
+        correct: "Kansas City",
+      },
+      {
+        question: "¿En que ciudad se va a jugar el SuperBowl?",
+        options: [
+          "Nueva Orleans",
+          "Las Vegas",
+          "Miami",
+          "San Francisco",
+        ],
+        correct: "Nueva Orleans",
+      },
+      {
+        question: "¿Cuál es el numero del jersey de Patrick Mahomes?",
+        options: ["15", "1", "10", "12"],
+        correct: "15",
+      },
+    ];
+
+    let currentQuestionIndex = 0;
+
+    const startScreen = document.getElementById("start-screen");
+    const quizContainer = document.getElementById("quiz");
+    const questionElement = document.getElementById("question");
+    const optionsElement = document.getElementById("options");
+    const finalMessageElement = document.getElementById("final-message");
+
+    function startQuiz() {
+      startScreen.style.display = "none";
+      quizContainer.style.display = "block";
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const currentQuestion = questions[currentQuestionIndex];
+      questionElement.textContent = currentQuestion.question;
+
+      optionsElement.innerHTML = "";
+      currentQuestion.options.forEach((option) => {
+        const button = document.createElement("button");
+        button.textContent = option;
+        button.onclick = () => handleAnswer(option);
+        optionsElement.appendChild(button);
+      });
+    }
+
+    function handleAnswer(selectedOption) {
+      const currentQuestion = questions[currentQuestionIndex];
+      if (selectedOption === currentQuestion.correct) {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions.length) {
+          showQuestion();
+        } else {
+          questionElement.style.display = "none";
+          optionsElement.style.display = "none";
+          finalMessageElement.style.display = "block";
+        }
+      } else {
+        alert("Respuesta incorrecta. Intenta de nuevo.");
+      }
+    }
+
+    function redirectToLocation() {
+      window.location.href = "https://maps.apple.com/?address=Avenida%20Miguel%20Hidalgo%20y%20Costilla%20702,%20Campbell,%2089260%20Tampico,%20Tamps.,%20M%C3%A9xico&ll=22.226773,-97.865256&q=Avenida%20Miguel%20Hidalgo%20y%20Costilla%20702&t=m"; // Cambia este enlace por la ubicación deseada
+    }
+  </script>
+</body>
+</html>
