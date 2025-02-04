@@ -102,7 +102,7 @@
   <div class="container" id="start-screen">
     <div class="start-container">
       <h1>Listo para el SuperBowl?</h1>
-      <p>No te puedo dar la ubicacion sin antes darte un poco de cultura, por eso hice este pequeno quiz</p>
+      <p>No te puedo dar la ubicación sin antes darte un poco de cultura, por eso hice este pequeño quiz.</p>
       <button onclick="startQuiz()">Comencemos</button>
     </div>
   </div>
@@ -115,7 +115,7 @@
       </div>
     </div>
     <div id="final-message" style="display: none;">
-      <p class="final-message">¡Felicidades, completaste el quiz!</p>
+      <p class="final-message">¡Felicidades, aquí está la ubicación!</p>
       <button class="final-button" onclick="redirectToLocation()">Ver ubicación</button>
     </div>
   </div>
@@ -123,17 +123,17 @@
   <script>
     const questions = [
       {
-        question: "¿Quien ha ganado mas superbowls en la historia?",
+        question: "¿Quién ha ganado mas superbowls en la historia?",
         options: ["New England Patriots", "Kansas City Chiefs", "Pittsburgh Steelers", "Tom Brady"],
         correct: "Tom Brady",
       },
       {
-        question: "Quien gano el Superbowl en 2024?",
+        question: "¿Quién ganó el Superbowl en 2024?",
         options: ["Miami Dolphins", "Kansas City", "Philadelphia Eagles", "49ers"],
         correct: "Kansas City",
       },
       {
-        question: "¿En que ciudad se va a jugar el SuperBowl?",
+        question: "¿En qué ciudad se va a jugar el SuperBowl?",
         options: [
           "Nueva Orleans",
           "Las Vegas",
@@ -188,7 +188,7 @@
           finalMessageElement.style.display = "block";
         }
       } else {
-        alert("Respuesta incorrecta. Intenta de nuevo.");
+        alert("Respuesta incorrecta");
       }
     }
 
