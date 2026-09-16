@@ -1,200 +1,121 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ubicación - Superbowl Watch Party</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      background: url(fondo.jpeg) no-repeat center center/cover;
-    }
-    .container {
-      background: rgba(255, 255, 255, 0.9);
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      width: 100%;
-      max-width: 400px;
-      text-align: center;
-    }
-    .start-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-    }
-    .start-container h1 {
-      font-size: 2rem;
-      margin-bottom: 10px;
-    }
-
-    .start-container h1:hover{
-      color: black;
-    }
-    .start-container button {
-      padding: 10px 20px;
-      font-size: 1rem;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      background-color: #000000;
-      color: #fff;
-      transition: background-color 0.3s ease;
-    }
-    .start-container button:hover {
-      background-color: #ffffff;
-      color: #000000;
-    }
-    .quiz-container {
-      display: none;
-    }
-    .question {
-      font-size: 1.2rem;
-      margin-bottom: 20px;
-    }
-    .options button {
-      width: 100%;
-      margin: 10px 0;
-      padding: 10px;
-      font-size: 1rem;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      background-color: #000000;
-      color: #fff;
-      transition: background-color 0.3s ease;
-    }
-    .options button:hover {
-      background-color: #2563eb;
-    }
-    .final-message {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #000000;
-      background-color: rgb(255, 255, 255);
-      padding: 10px;
-    }
-    .final-button {
-      padding: 10px 20px;
-      font-size: 1rem;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      background-color: #000000;
-      color: #fff;
-      transition: background-color 0.3s ease;
-      margin-top: 20px;
-    }
-    .final-button:hover {
-      background-color: #ffffff;
-      color: #000000;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f4efe6" />
+  <title>Split the Tab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="container" id="start-screen">
-    <div class="start-container">
-      <h1>Listo para el SuperBowl?</h1>
-      <p>No te puedo dar la ubicación sin antes darte un poco de cultura, por eso hice este pequeño quiz.</p>
-      <button onclick="startQuiz()">Comencemos</button>
-    </div>
-  </div>
-
-  <div class="quiz-container" id="quiz">
-    <div id="question-container">
-      <p class="question" id="question">Pregunta aquí</p>
-      <div class="options" id="options">
-        <!-- Opciones generadas dinámicamente -->
+  <main class="app-shell">
+    <header class="topbar">
+      <div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+      <div>
+        <p class="eyebrow">CANTEEN LEDGER</p>
+        <h1>Split the tab</h1>
       </div>
-    </div>
-    <div id="final-message" style="display: none;">
-      <p class="final-message">¡Felicidades, aquí está la ubicación!</p>
-      <button class="final-button" onclick="redirectToLocation()">Ver ubicación</button>
-    </div>
+      <button class="icon-button" id="resetButton" title="Clear all data" aria-label="Clear all data">↺</button>
+    </header>
+
+    <section class="intro-row">
+      <div>
+        <p class="eyebrow">TODAY'S SNAPSHOT</p>
+        <h2>Keep lunch fair,<br><em>without the maths.</em></h2>
+      </div>
+      <div class="balance-pill" id="totalOwed">€0.00<br><small>outstanding</small></div>
+    </section>
+
+    <nav class="tabs" aria-label="Main navigation">
+      <button class="tab active" data-view="balances">Balances</button>
+      <button class="tab" data-view="everyone">Everyone</button>
+      <button class="tab" data-view="activity">Activity <span class="count-badge" id="activityCount">0</span></button>
+    </nav>
+
+    <section class="view active" id="balancesView">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">WHO PAYS WHO</p>
+          <h3>Open balances</h3>
+        </div>
+        <span class="muted" id="peopleCount">0 people</span>
+      </div>
+      <div id="balancesList" class="balance-list empty-state">
+        <div class="empty-icon">+</div>
+        <strong>Your ledger is clear</strong>
+        <p>Add people and record the first lunch split below.</p>
+      </div>
+    </section>
+
+    <section class="view" id="everyoneView">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">THE FULL PICTURE</p>
+          <h3>Everyone owes everyone</h3>
+        </div>
+      </div>
+      <div id="ledgerList" class="ledger-list empty-state">
+        <div class="empty-icon">↔</div>
+        <strong>Add people to see the full ledger</strong>
+        <p>Each pair will appear here with their current net amount.</p>
+      </div>
+    </section>
+
+    <section class="view" id="activityView">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">RECENTLY LOGGED</p>
+          <h3>Activity</h3>
+        </div>
+      </div>
+      <div id="activityList" class="activity-list empty-state">
+        <div class="empty-icon">◷</div>
+        <strong>Nothing logged yet</strong>
+        <p>Your canteen payments will appear here.</p>
+      </div>
+    </section>
+
+    <button class="primary-button" id="addExpenseButton"><span>＋</span> Record a payment</button>
+    <button class="text-button" id="managePeopleButton">Manage people <span>→</span></button>
+  </main>
+
+  <div class="modal-backdrop" id="expenseModal" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="expenseTitle">
+      <button class="close-button" data-close="expenseModal" aria-label="Close">×</button>
+      <p class="eyebrow">NEW ENTRY</p>
+      <h2 id="expenseTitle">Record a payment</h2>
+      <p class="modal-copy">Who covered the canteen bill, and who needs to pay them back?</p>
+      <form id="expenseForm">
+        <label>Amount <span class="currency-input"><span>€</span><input type="number" id="amount" min="0.01" step="0.01" placeholder="0.00" required /></span></label>
+        <div class="form-grid">
+          <label>Paid by<select id="payer" required></select></label>
+          <label>Owed by<select id="debtor" required></select></label>
+        </div>
+        <label>Note <input type="text" id="note" maxlength="60" placeholder="e.g. Wednesday lunch" /></label>
+        <p class="form-error" id="expenseError"></p>
+        <button class="primary-button" type="submit">Add to ledger <span>→</span></button>
+      </form>
+    </section>
   </div>
 
-  <script>
-    const questions = [
-      {
-        question: "¿Quién ha ganado mas superbowls en la historia?",
-        options: ["New England Patriots", "Kansas City Chiefs", "Pittsburgh Steelers", "Tom Brady"],
-        correct: "Tom Brady",
-      },
-      {
-        question: "¿Quién ganó el Superbowl en 2024?",
-        options: ["Miami Dolphins", "Kansas City", "Philadelphia Eagles", "49ers"],
-        correct: "Kansas City",
-      },
-      {
-        question: "¿En qué ciudad se va a jugar el SuperBowl?",
-        options: [
-          "Nueva Orleans",
-          "Las Vegas",
-          "Miami",
-          "San Francisco",
-        ],
-        correct: "Nueva Orleans",
-      },
-      {
-        question: "¿Cuál es el numero del jersey de Patrick Mahomes?",
-        options: ["15", "1", "10", "12"],
-        correct: "15",
-      },
-    ];
+  <div class="modal-backdrop" id="peopleModal" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="peopleTitle">
+      <button class="close-button" data-close="peopleModal" aria-label="Close">×</button>
+      <p class="eyebrow">YOUR GROUP</p>
+      <h2 id="peopleTitle">Manage people</h2>
+      <p class="modal-copy">Add everyone you share lunches with. Names stay on this device.</p>
+      <form id="personForm" class="inline-form">
+        <input type="text" id="personName" maxlength="28" placeholder="Name" required />
+        <button class="small-button" type="submit">Add</button>
+      </form>
+      <div class="people-list" id="peopleList"></div>
+    </section>
+  </div>
 
-    let currentQuestionIndex = 0;
-
-    const startScreen = document.getElementById("start-screen");
-    const quizContainer = document.getElementById("quiz");
-    const questionElement = document.getElementById("question");
-    const optionsElement = document.getElementById("options");
-    const finalMessageElement = document.getElementById("final-message");
-
-    function startQuiz() {
-      startScreen.style.display = "none";
-      quizContainer.style.display = "block";
-      showQuestion();
-    }
-
-    function showQuestion() {
-      const currentQuestion = questions[currentQuestionIndex];
-      questionElement.textContent = currentQuestion.question;
-
-      optionsElement.innerHTML = "";
-      currentQuestion.options.forEach((option) => {
-        const button = document.createElement("button");
-        button.textContent = option;
-        button.onclick = () => handleAnswer(option);
-        optionsElement.appendChild(button);
-      });
-    }
-
-    function handleAnswer(selectedOption) {
-      const currentQuestion = questions[currentQuestionIndex];
-      if (selectedOption === currentQuestion.correct) {
-        currentQuestionIndex++;
-        if (currentQuestionIndex < questions.length) {
-          showQuestion();
-        } else {
-          questionElement.style.display = "none";
-          optionsElement.style.display = "none";
-          finalMessageElement.style.display = "block";
-        }
-      } else {
-        alert("Respuesta incorrecta");
-      }
-    }
-
-    function redirectToLocation() {
-      window.location.href = "https://maps.apple.com/?address=Avenida%20Miguel%20Hidalgo%20y%20Costilla%20702,%20Campbell,%2089260%20Tampico,%20Tamps.,%20M%C3%A9xico&ll=22.226773,-97.865256&q=Avenida%20Miguel%20Hidalgo%20y%20Costilla%20702&t=m"; // Cambia este enlace por la ubicación deseada
-    }
-  </script>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="app.js"></script>
 </body>
 </html>
