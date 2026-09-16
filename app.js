@@ -1,20 +1,42 @@
-const STORAGE_KEY = 'split-the-tab-v1';
 const defaultState = { people: [], expenses: [] };
-let state = loadState();
+let state = { ...defaultState };
+let database;
 
 const $ = (selector) => document.querySelector(selector);
 const money = (value) => `€${value.toFixed(2)}`;
 
-function loadState() {
-  try {
-    return { ...defaultState, ...JSON.parse(localStorage.getItem(STORAGE_KEY)) };
-  } catch {
-    return { ...defaultState };
-  }
+function isDatabaseConfigured() {
+  return window.SUPABASE_URL && window.SUPABASE_ANON_KEY
+    && !window.SUPABASE_URL.includes('YOUR_PROJECT')
+    && !window.SUPABASE_ANON_KEY.includes('YOUR_SUPABASE');
 }
 
-function saveState() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+async function loadState() {
+  if (!isDatabaseConfigured()) {
+    showToast('Add your Supabase settings to connect the shared ledger.');
+    render();
+    return;
+  }
+  database = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+  const { data, error } = await database.from('ledgers').select('people, expenses').eq('room_code', window.SUPABASE_ROOM).maybeSingle();
+  if (error) {
+    showToast('Could not connect to the shared ledger.');
+    render();
+    return;
+  }
+  if (data) state = { people: data.people || [], expenses: data.expenses || [] };
+  render();
+}
+
+async function saveState() {
+  if (!database) return;
+  const { error } = await database.from('ledgers').upsert({
+    room_code: window.SUPABASE_ROOM,
+    people: state.people,
+    expenses: state.expenses,
+    updated_at: new Date().toISOString(),
+  });
+  if (error) showToast('Could not save the shared ledger.');
 }
 
 function initials(name) {
@@ -208,4 +230,4 @@ $('#resetButton').addEventListener('click', () => {
   }
 });
 
-render();
+loadState();
